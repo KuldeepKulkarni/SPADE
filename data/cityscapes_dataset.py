@@ -38,10 +38,15 @@ class CityscapesDataset(Pix2pixDataset):
 
         if not opt.no_instance:
             instance_paths = [p for p in label_paths_all if p.endswith('_instanceIds.png')]
+            inst_bd_paths = [] 
+        elif not opt.no_bd:
+            instance_paths = []
+            inst_bd_paths = [p for p in label_paths_all if p.endswith('_bd.png')]
         else:
             instance_paths = []
+            inst_bd_paths = []
 
-        return label_paths, image_paths, instance_paths
+        return label_paths, image_paths, instance_paths, inst_bd_paths
 
     def paths_match(self, path1, path2):
         name1 = os.path.basename(path1)
