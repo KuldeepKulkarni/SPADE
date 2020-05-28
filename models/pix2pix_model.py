@@ -112,6 +112,7 @@ class Pix2PixModel(torch.nn.Module):
             data['label'] = data['label'].cuda()
             data['instance'] = data['instance'].cuda()
             data['image'] = data['image'].cuda()
+            data['bd_map'] = data['bd_map'].cuda()
 
         # create one-hot label map
         label_map = data['label']
@@ -126,6 +127,9 @@ class Pix2PixModel(torch.nn.Module):
             inst_map = data['instance']
             instance_edge_map = self.get_edges(inst_map)
             input_semantics = torch.cat((input_semantics, instance_edge_map), dim=1)
+        elif not self.opt.no_bd:
+            instance_edge_map = data['bd_map']
+            input_semantics = torch.cat((input_semantics,instance_edge_map), dim=1)
 
         return input_semantics, data['image']
 
