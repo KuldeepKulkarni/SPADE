@@ -47,7 +47,7 @@ class Pix2pixDataset(BaseDataset):
         image_paths = []
         instance_paths = []
         assert False, "A subclass of Pix2pixDataset must override self.get_paths(self, opt)"
-        return label_paths, image_paths, instance_paths
+        return label_paths, image_paths, instance_paths, bd_paths
 
     def paths_match(self, path1, path2):
         filename1_without_ext = os.path.splitext(os.path.basename(path1))[0]
@@ -85,11 +85,23 @@ class Pix2pixDataset(BaseDataset):
                 instance_tensor = instance_tensor.long()
             else:
                 instance_tensor = transform_label(instance)
+                
+        if self.opt.no_bd:
+            instance_tensor = 0
+        else:
+            inst_bd_path = self.inst_bd_paths[index]
+            bd_map = Image.open(inst_bd_path)
+            if bd_map.mode == 'L':
+                bd_map_tensor = transform_label(bd_map) * 255
+                bd_map_tensor = bd_map_tensor.long()
+            else:
+                bd_map_tensor = transform_label(bd_map_tensor)
 
         input_dict = {'label': label_tensor,
                       'instance': instance_tensor,
                       'image': image_tensor,
                       'path': image_path,
+                      'bd_map': bd_map_tensor,
                       }
 
         # Give subclasses a chance to modify the final output
