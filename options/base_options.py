@@ -63,6 +63,7 @@ class BaseOptions():
 
         # for instance-wise features
         parser.add_argument('--no_instance', action='store_true', help='if specified, do *not* add instance map as input')
+        parser.add_argument('--no_bd', action='store_true', help='if specified, do *not* add boundary map as input')
         parser.add_argument('--nef', type=int, default=16, help='# of encoder filters in the first conv layer')
         parser.add_argument('--use_vae', action='store_true', help='enable training with an image encoder.')
 
