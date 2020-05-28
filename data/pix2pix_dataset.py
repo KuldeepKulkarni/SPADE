@@ -91,11 +91,10 @@ class Pix2pixDataset(BaseDataset):
         else:
             inst_bd_path = self.inst_bd_paths[index]
             bd_map = Image.open(inst_bd_path)
-            if bd_map.mode == 'L':
-                bd_map_tensor = transform_label(bd_map) * 255
-                bd_map_tensor = bd_map_tensor.long()
-            else:
-                bd_map_tensor = transform_label(bd_map_tensor)
+            bd_map_tensor = transform_label(bd_map)/255.
+            bd_map_tensor = bd_map_tensor.float()
+           
+        
 
         input_dict = {'label': label_tensor,
                       'instance': instance_tensor,
